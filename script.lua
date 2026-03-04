@@ -51,7 +51,7 @@ local UltraButton = Instance.new("TextButton", MainFrame)
 UltraButton.Size = UDim2.new(0.9, 0, 0, 30)
 UltraButton.Position = UDim2.new(0.05, 0, 0, 35)
 UltraButton.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
-UltraButton.Text = "STOP ALL ANIMS (PERMANENT)"
+UltraButton.Text = "AntiLag🌌"
 UltraButton.Font = Enum.Font.GothamBold
 UltraButton.TextSize = 8
 UltraButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -150,7 +150,7 @@ UltraButton.MouseButton1Click:Connect(function()
     UltraButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     task.spawn(function()
         StartPerpetualFreeze()
-        UltraButton.Text = "PERMANENT FREEZE ON ✓"
+        UltraButton.Text = "AntiLag🌌 ON ✓"
     end)
 end)
 
