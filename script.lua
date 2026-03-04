@@ -51,7 +51,7 @@ local UltraButton = Instance.new("TextButton", MainFrame)
 UltraButton.Size = UDim2.new(0.9, 0, 0, 30)
 UltraButton.Position = UDim2.new(0.05, 0, 0, 35)
 UltraButton.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
-UltraButton.Text = "STOP BRAINROT ANIMS" -- Testo pulito come richiesto
+UltraButton.Text = "AntiLag🥵" -- Testo pulito come richiesto
 UltraButton.Font = Enum.Font.GothamBold
 UltraButton.TextSize = 9
 UltraButton.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -137,7 +137,7 @@ UltraButton.MouseButton1Click:Connect(function()
         StopAllAnimations()
         UltraButton.Text = "ALL FROZEN ✓"
         task.wait(2)
-        UltraButton.Text = "STOP BRAINROT ANIMS"
+        UltraButton.Text = "AntiLag🥵"
     end)
 end)
 
