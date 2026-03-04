@@ -1,69 +1,43 @@
 -- ================================================
--- MELOSKA ANTI LAG - CLEANED & BALANCED VERSION
+-- MELOSKA ANTI LAG - ULTRA PERFORMANCE EDITION
 -- ================================================
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
 local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
 
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
 -- ================================================
--- CONFIG (BILANCIATA PER NON BLOCCARE IL GAMEPLAY)
--- ================================================
-local CONFIG = {
-    FPS_TARGET = 60,
-    DESTROY_VFX = true,           -- Disabilita effetti particellari
-    DESTROY_ANIMATIONS = false,   -- FALSO: Necessario per rubare/interagire
-    DESTROY_UNUSED_MODELS = true, 
-    OPTIMIZE_RENDER = true,       
-    DISABLE_SHADOWS = true,       
-}
-
--- ================================================
--- MAIN GUI (FIXED PER MOBILE & TABLET)
+-- MAIN GUI (FIXED PER MOBILE & CENTRATA)
 -- ================================================
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "MeloskaAntiLag_V2"
 ScreenGui.ResetOnSpawn = false
-ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 ScreenGui.Parent = CoreGui:FindFirstChild("RobloxGui") or CoreGui
 
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-
--- FIX POSIZIONE: AnchorPoint e Position centrata (50%)
 MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
 MainFrame.Size = UDim2.new(0, 180, 0, 110)
 MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0) 
-
 MainFrame.BackgroundColor3 = Color3.fromRGB(10, 15, 30)
 MainFrame.BorderSizePixel = 0
 MainFrame.ClipsDescendants = true
 MainFrame.Parent = ScreenGui
 
-local UICorner = Instance.new("UICorner")
+local UICorner = Instance.new("UICorner", MainFrame)
 UICorner.CornerRadius = UDim.new(0, 12)
-UICorner.Parent = MainFrame
 
-local UIGradient = Instance.new("UIGradient")
-UIGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 220)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 220, 255))
-}
-UIGradient.Rotation = 45
-UIGradient.Parent = MainFrame
-
-local UIStroke = Instance.new("UIStroke")
+local UIStroke = Instance.new("UIStroke", MainFrame)
 UIStroke.Thickness = 2.5
 UIStroke.Color = Color3.fromRGB(255, 255, 255)
-UIStroke.Parent = MainFrame
 
--- Title: Meloska ANTI LAG
-local TitleLabel = Instance.new("TextLabel")
+-- Titolo
+local TitleLabel = Instance.new("TextLabel", MainFrame)
 TitleLabel.Size = UDim2.new(1, 0, 0, 25)
 TitleLabel.Position = UDim2.new(0, 0, 0, 5)
 TitleLabel.BackgroundTransparency = 1
@@ -71,35 +45,109 @@ TitleLabel.Text = "Meloska ANTI LAG"
 TitleLabel.Font = Enum.Font.GothamBlack
 TitleLabel.TextSize = 13
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.Parent = MainFrame
 
 -- Bottoni
-local UltraButton = Instance.new("TextButton")
+local UltraButton = Instance.new("TextButton", MainFrame)
+UltraButton.Name = "UltraButton"
 UltraButton.Size = UDim2.new(0.9, 0, 0, 30)
 UltraButton.Position = UDim2.new(0.05, 0, 0, 35)
 UltraButton.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
-UltraButton.Text = "BALANCED ANTI-LAG"
+UltraButton.Text = "SUPER ANTI-LAG (ANIM OFF)"
 UltraButton.Font = Enum.Font.GothamBold
-UltraButton.TextSize = 10
+UltraButton.TextSize = 9
 UltraButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-UltraButton.Parent = MainFrame
 
-local FPSButton = Instance.new("TextButton")
+local FPSButton = Instance.new("TextButton", MainFrame)
+FPSButton.Name = "FPSButton"
 FPSButton.Size = UDim2.new(0.9, 0, 0, 30)
 FPSButton.Position = UDim2.new(0.05, 0, 0, 72)
 FPSButton.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
-FPSButton.Text = "LIGHT FPS BOOST"
+FPSButton.Text = "ULTRA FPS BOOSTER"
 FPSButton.Font = Enum.Font.GothamBold
-FPSButton.TextSize = 10
+FPSButton.TextSize = 9
 FPSButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-FPSButton.Parent = MainFrame
 
 Instance.new("UICorner", UltraButton).CornerRadius = UDim.new(0, 6)
 Instance.new("UICorner", FPSButton).CornerRadius = UDim.new(0, 6)
 
 -- ================================================
--- TRASCINAMENTO (MOBILE FRIENDLY)
+-- FUNZIONI POTENZIATE
 -- ================================================
+
+local function UltraAntiLag()
+    -- 1. Ferma le animazioni (Locale)
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player.Character then
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                local animator = humanoid:FindFirstChildOfClass("Animator")
+                if animator then animator:Destroy() end -- Rimuove l'oggetto che gestisce le animazioni
+            end
+        end
+    end
+    
+    -- 2. Rimuove effetti pesanti
+    for _, v in ipairs(workspace:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.Material = Enum.Material.SmoothPlastic
+            v.CastShadow = false
+        elseif v:IsA("Decal") or v:IsA("Texture") then
+            v:Destroy()
+        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
+            v.Enabled = false
+        end
+    end
+end
+
+local function UltraFPSBoost()
+    -- Impostazioni di Rendering Estreme
+    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+    settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
+    
+    -- Pulizia Lighting (Cielo, Nebbia, Effetti)
+    Lighting.GlobalShadows = false
+    Lighting.FogEnd = 9e9
+    Lighting.Brightness = 1
+    
+    for _, v in ipairs(Lighting:GetChildren()) do
+        if v:IsA("PostEffect") or v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("Sky") then
+            v.Parent = nil -- Rimuove temporaneamente effetti pesanti
+        end
+    end
+    
+    -- Forza basso dettaglio su tutto
+    for _, part in ipairs(workspace:GetDescendants()) do
+        if part:IsA("BasePart") then
+            part.Reflectance = 0
+        end
+    end
+end
+
+-- ================================================
+-- GESTIONE BOTTONI & DRAG
+-- ================================================
+
+UltraButton.MouseButton1Click:Connect(function()
+    UltraButton.Text = "ANIMATIONS DISABLED..."
+    task.spawn(function()
+        UltraAntiLag()
+        UltraButton.Text = "ULTRA MODE ON ✓"
+        task.wait(2)
+        UltraButton.Text = "SUPER ANTI-LAG (ANIM OFF)"
+    end)
+end)
+
+FPSButton.MouseButton1Click:Connect(function()
+    FPSButton.Text = "BOOSTING FPS..."
+    task.spawn(function()
+        UltraFPSBoost()
+        FPSButton.Text = "MAX PERFORMANCE ✓"
+        task.wait(2)
+        FPSButton.Text = "ULTRA FPS BOOSTER"
+    end)
+end)
+
+-- Draggable (Supporto Mobile)
 local dragging, mousePos, framePos
 MainFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -122,64 +170,4 @@ UserInputService.InputEnded:Connect(function(input)
     end
 end)
 
--- ================================================
--- FUNZIONI DI OTTIMIZZAZIONE (DEPOTENZIATE)
--- ================================================
-
-local function BalancedOptimize()
-    -- Disabilita Ombre e post-processing
-    game:GetService("Lighting").GlobalShadows = false
-    
-    for _, obj in ipairs(workspace:GetDescendants()) do
-        -- Sostituzione materiali (più veloce ma sicuro)
-        if obj:IsA("BasePart") then
-            obj.Material = Enum.Material.SmoothPlastic
-            obj.Reflectance = 0
-        -- Disabilita particelle invece di distruggerle
-        elseif obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") then
-            obj.Enabled = false
-        -- Rimuove decalcomanie pesanti
-        elseif obj:IsA("Decal") or obj:IsA("Texture") then
-            pcall(function() obj:Destroy() end)
-        end
-    end
-    
-    -- Qualità rendering minima
-    settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-    print("[Meloska] Ottimizzazione Bilanciata Eseguita!")
-end
-
--- ================================================
--- BUTTON HANDLERS
--- ================================================
-UltraButton.MouseButton1Click:Connect(function()
-    UltraButton.Text = "CLEANING..."
-    UltraButton.BackgroundColor3 = Color3.fromRGB(0, 150, 255)
-    task.spawn(function()
-        BalancedOptimize()
-        UltraButton.Text = "READY ✓"
-        task.wait(2)
-        UltraButton.Text = "BALANCED ANTI-LAG"
-        UltraButton.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
-    end)
-end)
-
-FPSButton.MouseButton1Click:Connect(function()
-    FPSButton.Text = "BOOSTING..."
-    FPSButton.BackgroundColor3 = Color3.fromRGB(0, 220, 100)
-    task.spawn(function()
-        settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-        FPSButton.Text = "BOOSTED ✓"
-        task.wait(2)
-        FPSButton.Text = "LIGHT FPS BOOST"
-        FPSButton.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
-    end)
-end)
-
--- ================================================
--- AUTO-START
--- ================================================
-task.spawn(function()
-    task.wait(3)
-    print("Meloska ANTI LAG caricato correttamente!")
-end)
+print("Meloska Ultra Anti-Lag Loaded!")
