@@ -1,5 +1,5 @@
 -- ================================================
--- MELOSKA ANTI LAG - ULTRA PERFORMANCE EDITION
+-- MELOSKA ANTI LAG - BRAINROT STOPPER EDITION
 -- ================================================
 
 local Players = game:GetService("Players")
@@ -12,7 +12,7 @@ local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
 -- ================================================
--- MAIN GUI (FIXED PER MOBILE & CENTRATA)
+-- MAIN GUI (CENTRATA E OTTIMIZZATA PER MOBILE)
 -- ================================================
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "MeloskaAntiLag_V2"
@@ -46,19 +46,17 @@ TitleLabel.Font = Enum.Font.GothamBlack
 TitleLabel.TextSize = 13
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 
--- Bottoni
+-- Bottoni (Dettaglio Anim Off rimosso)
 local UltraButton = Instance.new("TextButton", MainFrame)
-UltraButton.Name = "UltraButton"
 UltraButton.Size = UDim2.new(0.9, 0, 0, 30)
 UltraButton.Position = UDim2.new(0.05, 0, 0, 35)
 UltraButton.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
-UltraButton.Text = "SUPER ANTI-LAG (ANIM OFF)"
+UltraButton.Text = "STOP BRAINROT ANIMS" -- Testo pulito come richiesto
 UltraButton.Font = Enum.Font.GothamBold
 UltraButton.TextSize = 9
 UltraButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 local FPSButton = Instance.new("TextButton", MainFrame)
-FPSButton.Name = "FPSButton"
 FPSButton.Size = UDim2.new(0.9, 0, 0, 30)
 FPSButton.Position = UDim2.new(0.05, 0, 0, 72)
 FPSButton.BackgroundColor3 = Color3.fromRGB(20, 25, 40)
@@ -74,71 +72,77 @@ Instance.new("UICorner", FPSButton).CornerRadius = UDim.new(0, 6)
 -- FUNZIONI POTENZIATE
 -- ================================================
 
-local function UltraAntiLag()
-    -- 1. Ferma le animazioni (Locale)
-    for _, player in ipairs(Players:GetPlayers()) do
-        if player.Character then
-            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                local animator = humanoid:FindFirstChildOfClass("Animator")
-                if animator then animator:Destroy() end -- Rimuove l'oggetto che gestisce le animazioni
+local function StopAllAnimations()
+    -- Ferma ogni animazione presente nel gioco (NPC e Players)
+    for _, obj in ipairs(workspace:GetDescendants()) do
+        if obj:IsA("Humanoid") then
+            -- Rimuove l'oggetto Animator (blocca nuove animazioni)
+            local animator = obj:FindFirstChildOfClass("Animator")
+            if animator then animator:Destroy() end
+            
+            -- Forza lo stop immediato di quelle in corso
+            for _, track in ipairs(obj:GetPlayingAnimationTracks()) do
+                track:Stop(0)
+            end
+        end
+        
+        -- Blocca gli script di movimento tipici dei Brainrot
+        if obj:IsA("LocalScript") or obj:IsA("Script") then
+            if obj.Name == "Animate" or obj.Name == "AnimationHandler" or obj.Name == "Mover" then
+                obj.Disabled = true
             end
         end
     end
     
-    -- 2. Rimuove effetti pesanti
+    -- Ottimizzazione materiali per recuperare FPS
     for _, v in ipairs(workspace:GetDescendants()) do
         if v:IsA("BasePart") then
             v.Material = Enum.Material.SmoothPlastic
             v.CastShadow = false
-        elseif v:IsA("Decal") or v:IsA("Texture") then
-            v:Destroy()
-        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") then
-            v.Enabled = false
+        elseif v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Decal") then
+            pcall(function() v:Destroy() end)
         end
     end
 end
 
 local function UltraFPSBoost()
-    -- Impostazioni di Rendering Estreme
+    -- Impostazioni estreme per Mobile
     settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
-    settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level01
-    
-    -- Pulizia Lighting (Cielo, Nebbia, Effetti)
     Lighting.GlobalShadows = false
     Lighting.FogEnd = 9e9
-    Lighting.Brightness = 1
     
+    -- Rimuove decorazioni del cielo e atmosfera pesante
     for _, v in ipairs(Lighting:GetChildren()) do
-        if v:IsA("PostEffect") or v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("Sky") then
-            v.Parent = nil -- Rimuove temporaneamente effetti pesanti
+        if v:IsA("Sky") or v:IsA("Atmosphere") or v:IsA("Clouds") then
+            v:Destroy()
         end
     end
     
-    -- Forza basso dettaglio su tutto
-    for _, part in ipairs(workspace:GetDescendants()) do
-        if part:IsA("BasePart") then
-            part.Reflectance = 0
+    -- Abbassa la fedeltà delle Mesh
+    for _, v in ipairs(workspace:GetDescendants()) do
+        if v:IsA("MeshPart") then
+            v.RenderFidelity = Enum.RenderFidelity.Low
+            v.Reflectance = 0
         end
     end
 end
 
 -- ================================================
--- GESTIONE BOTTONI & DRAG
+-- HANDLERS & DRAG (MOBILE FRIENDLY)
 -- ================================================
 
 UltraButton.MouseButton1Click:Connect(function()
-    UltraButton.Text = "ANIMATIONS DISABLED..."
+    UltraButton.Text = "FREEZING EVERYTHING..."
     task.spawn(function()
-        UltraAntiLag()
-        UltraButton.Text = "ULTRA MODE ON ✓"
+        StopAllAnimations()
+        UltraButton.Text = "ALL FROZEN ✓"
         task.wait(2)
-        UltraButton.Text = "SUPER ANTI-LAG (ANIM OFF)"
+        UltraButton.Text = "STOP BRAINROT ANIMS"
     end)
 end)
 
 FPSButton.MouseButton1Click:Connect(function()
-    FPSButton.Text = "BOOSTING FPS..."
+    FPSButton.Text = "MAX BOOSTING..."
     task.spawn(function()
         UltraFPSBoost()
         FPSButton.Text = "MAX PERFORMANCE ✓"
@@ -147,7 +151,7 @@ FPSButton.MouseButton1Click:Connect(function()
     end)
 end)
 
--- Draggable (Supporto Mobile)
+-- Sistema di trascinamento compatibile con il Touch dei telefoni
 local dragging, mousePos, framePos
 MainFrame.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -156,18 +160,16 @@ MainFrame.InputBegan:Connect(function(input)
         framePos = MainFrame.Position
     end
 end)
-
 UserInputService.InputChanged:Connect(function(input)
     if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
         local delta = input.Position - mousePos
         MainFrame.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
     end
 end)
-
 UserInputService.InputEnded:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = false
     end
 end)
 
-print("Meloska Ultra Anti-Lag Loaded!")
+print("Meloska Anti-Lag (No-Detail Version) Loaded!")
